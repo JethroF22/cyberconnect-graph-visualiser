@@ -11,7 +11,7 @@ export const formatGraphInfo = (
   return { nodes: [rootNode, ...nodes], edges };
 };
 
-const formatNodes = (identities: Identity[]) => {
+export const formatNodes = (identities: Identity[]) => {
   return identities.map((identity, index) => ({
     id: index + 1, // IDs start at 0 with rootNode
     label: `${identity.address} (${identity.ens})`,
@@ -22,16 +22,24 @@ const formatNodes = (identities: Identity[]) => {
   }));
 };
 
-const formatEdges = (identities: Identity[], rootNode: Node) => {
-  return identities.map((identity, index) => {
-    const id = index + 1;
-    const fromId = identity.type === IdentityType.FOLLOWED ? id : rootNode.id;
-    const toId = identity.type === IdentityType.FOLLOWING ? id : rootNode.id;
-    return {
-      from: fromId,
-      to: toId,
-    };
-  });
+export const formatEdges = (identities: Identity[], rootNode: Node) => {
+  return identities.map((identity, index) =>
+    formatEdge(identity, rootNode, index)
+  );
+};
+
+export const formatEdge = (
+  identity: Identity,
+  rootNode: Node,
+  index: number
+) => {
+  const id = index + 1;
+  const fromId = identity.type === IdentityType.FOLLOWED ? id : rootNode.id;
+  const toId = identity.type === IdentityType.FOLLOWING ? id : rootNode.id;
+  return {
+    from: fromId,
+    to: toId,
+  };
 };
 
 export const options = {

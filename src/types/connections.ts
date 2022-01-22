@@ -2,11 +2,11 @@ export interface Identity {
   address: string;
   domain: string;
   ens: string;
-  social: string;
+  social?: string;
   avatar: string;
-  joinTime: string;
-  followingCount: number;
-  followerCount: number;
+  joinTime?: string;
+  followingCount?: number;
+  followerCount?: number;
   type?: IdentityType;
 }
 
