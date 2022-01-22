@@ -1,18 +1,17 @@
-import { useQuery } from "react-apollo";
-import { following } from "./graphql/queries";
+import Graph from "react-graph-vis";
+
+import useGetConnections from "./hooks/useGetConnections";
+import { options } from "./lib/graph";
 
 function App() {
-  const { loading, data } = useQuery(following, {
-    variables: {
-      address: "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E",
-    },
-  });
-  console.log("data", data);
+  const { graphInfo, data, loading } = useGetConnections(
+    "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E"
+  );
 
   return (
     <>
       {loading && "Loading..."}
-      {!loading && <div>Hello World</div>}
+      {!loading && graphInfo && <Graph graph={graphInfo} options={options} />}
     </>
   );
 }
