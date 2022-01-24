@@ -11,14 +11,19 @@ export const formatGraphInfo = (
   return { nodes: [rootNode, ...nodes], edges };
 };
 
-export const formatNodes = (identities: Identity[]) => {
+export const formatNodes = (identities: Identity[]): Node[] => {
   return identities.map((identity, index) => ({
-    id: index + 1, // IDs start at 0 with rootNode
-    label: `${identity.address} (${identity.ens})`,
-    title: identity.address,
-    shape: "circularImage",
-    image:
-      identity.avatar || "http://cdn.onlinewebfonts.com/svg/img_258083.png",
+    data: {
+      id: index + 1, // IDs start at 0 with rootNode
+      label: `${identity.address} (${identity.ens})`,
+      image:
+        identity.avatar || "http://cdn.onlinewebfonts.com/svg/img_258083.png",
+      color: "#000000",
+    },
+    position: {
+      x: null,
+      y: null,
+    },
   }));
 };
 
@@ -32,20 +37,19 @@ export const formatEdge = (
   identity: Identity,
   rootNode: Node,
   index: number
-) => {
+): Edge => {
   const id = index + 1;
-  const fromId = identity.type === IdentityType.FOLLOWED ? id : rootNode.id;
-  const toId = identity.type === IdentityType.FOLLOWING ? id : rootNode.id;
+  const sourceId =
+    identity.type === IdentityType.FOLLOWED ? id : rootNode.data.id;
+  const targetId =
+    identity.type === IdentityType.FOLLOWING ? id : rootNode.data.id;
+  const label =
+    identity.type === IdentityType.FOLLOWING ? "following" : "followed by";
   return {
-    from: fromId,
-    to: toId,
+    data: {
+      source: sourceId,
+      target: targetId,
+      label,
+    },
   };
-};
-
-export const options = {
-  edges: {
-    color: "#95d1fe",
-    length: 750,
-  },
-  height: "1000px",
 };

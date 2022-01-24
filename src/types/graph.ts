@@ -1,14 +1,22 @@
 export interface Node {
-  id: string | number;
-  label: string;
-  title?: string;
-  shape: string;
-  image: string;
+  data: {
+    id: string | number;
+    label: string;
+    image: string;
+    color?: string;
+  };
+  position: {
+    x: number | null;
+    y: number | null;
+  };
 }
 
 export interface Edge {
-  from: string | number;
-  to: string | number;
+  data: {
+    source: string | number;
+    target: string | number;
+    label: string;
+  };
 }
 
 export interface GraphInfo {

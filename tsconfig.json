@@ -22,5 +22,10 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "paths": {
+      "react-cytoscapejs": [
+        "node_modules/react-cytoscapejs"
+      ]
+    },
 }

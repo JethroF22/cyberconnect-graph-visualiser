@@ -1,19 +1,7 @@
-import Graph from "react-graph-vis";
-
-import useGetConnections from "./hooks/useGetConnections";
-import { options } from "./lib/graph";
+import CustomGraph from "./components/CustomGraph";
 
 function App() {
-  const { graphInfo, data, loading } = useGetConnections(
-    "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E"
-  );
-
-  return (
-    <>
-      {loading && "Loading..."}
-      {!loading && graphInfo && <Graph graph={graphInfo} options={options} />}
-    </>
-  );
+  return <CustomGraph />;
 }
 
 export default App;
