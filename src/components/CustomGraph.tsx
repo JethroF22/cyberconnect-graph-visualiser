@@ -1,48 +1,73 @@
-import { FC } from "react";
+import { useRef, useEffect, FC } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
-import Cytoscape from "cytoscape";
-import COSEBilkent from "cytoscape-cose-bilkent";
+import cytoscape from "cytoscape";
 
 import useGetConnections from "../hooks/useGetConnections";
-
-Cytoscape.use(COSEBilkent);
+import useGetTransactions from "../hooks/useGetAddressTransactions";
+import { RequestState } from "../types/http";
 
 const CustomGraph: FC = () => {
-  const { loading, graphInfo, graphIsLoaded } = useGetConnections(
+  const cyRef = useRef<cytoscape.Core>(null);
+  const { graphInfo: socialGraphInfo, graphIsLoaded } = useGetConnections(
+    "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E"
+  );
+  const { requestState, graphInfo: transactionGraphInfo } = useGetTransactions(
     "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E"
   );
 
-  console.log("graphInfo", graphInfo);
+  let elements = CytoscapeComponent.normalizeElements(socialGraphInfo);
+  elements = [
+    ...elements,
+    ...CytoscapeComponent.normalizeElements(transactionGraphInfo),
+  ];
 
-  const elements = CytoscapeComponent.normalizeElements(graphInfo);
-  console.log("elements", elements);
+  const layout = {
+    name: "cose",
+    idealEdgeLength: function () {
+      return 250;
+    },
+    nodeOverlap: 100,
+  };
 
-  const layout = { name: "cose" };
+  useEffect(() => {
+    if (cyRef.current) {
+      const cy = cyRef.current;
+
+      cy.nodes().on("click", (event) => {
+        let target = event.target;
+        console.log("target", target._private.data);
+      });
+    }
+  }, [elements]);
 
   return (
     <>
-      {!graphIsLoaded && "Loading..."}
-      {graphIsLoaded && (
+      {(requestState === RequestState.LOADING || !graphIsLoaded) &&
+        "Loading..."}
+      {requestState === RequestState.RESOLVED && graphIsLoaded && (
         <CytoscapeComponent
           stylesheet={[
             {
               selector: "node",
               style: {
-                width: 20,
-                height: 20,
-                shape: "rectangle",
+                width: 40,
+                height: 40,
+                shape: "ellipse",
+                "background-color": "data(color)",
               },
             },
             {
               selector: "edge",
               style: {
                 width: 2,
+                "line-color": "data(color)",
               },
             },
           ]}
           style={{ width: "100%", height: "1000px" }}
           elements={elements}
           layout={layout}
+          cy={(cy) => (cyRef.current = cy)}
         />
       )}
     </>

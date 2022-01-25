@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-apollo";
 
 import { following } from "../graphql/queries";
-import { formatGraphInfo } from "../lib/graph";
+import { formatConnectionGraphInfo } from "../lib/graph";
 import { Identity, IdentityType } from "../types/connections";
-import { GraphInfo, Node } from "../types/graph";
+import { ConnectionGraphInfo, ConnectionNode } from "../types/graph";
 
 export default function useGetConnections(address: string) {
   const { loading, data } = useQuery(following, {
@@ -13,22 +13,19 @@ export default function useGetConnections(address: string) {
     },
   });
   const [graphIsLoaded, setGraphLoadedState] = useState(false);
-  const [graphInfo, setGraphInfo] = useState<GraphInfo>({
+  const [graphInfo, setGraphInfo] = useState<ConnectionGraphInfo>({
     nodes: [],
     edges: [],
   });
 
   useEffect(() => {
     if (!loading && data) {
-      const rootNode: Node = {
+      const rootNode: ConnectionNode = {
         data: {
           id: 0,
           label: `${data.identity.address} (${data.identity.ens})`,
-          // title: data.identity.address,
-          image:
-            data.identity.avatar ||
-            "http://cdn.onlinewebfonts.com/svg/img_258083.png",
-          color: "#000000",
+          color: "#C6C7C4",
+          ...data.identity,
         },
         position: {
           x: 0,
@@ -41,23 +38,10 @@ export default function useGetConnections(address: string) {
       const followingAddresses: Identity[] = data.identity.followers.list.map(
         (identity: Identity) => ({ ...identity, type: IdentityType.FOLLOWING })
       );
-      const graphInfo = formatGraphInfo(
+      const graphInfo = formatConnectionGraphInfo(
         [...followedAddresses, ...followingAddresses],
         rootNode
       );
-
-      graphInfo.nodes = graphInfo.nodes.map((node, index) => {
-        const angle = (index * 2 * Math.PI) / graphInfo.nodes.length;
-        const mappedNode = {
-          data: node.data,
-          position: {
-            x: 100 * Math.cos(angle),
-            y: 100 * Math.sin(angle),
-          },
-        };
-        return mappedNode;
-      });
-      console.log("nodes", graphInfo.nodes);
       setGraphInfo(graphInfo);
       setGraphLoadedState(true);
     }

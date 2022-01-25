@@ -1,14 +1,17 @@
 import { Identity, IdentityType } from "../../types/connections";
-import { Node } from "../../types/graph";
-import { formatNodes, formatEdge } from "../graph";
+import { ConnectionNode } from "../../types/graph";
+import { formatConnectionNodes, formatConnectionEdge } from "../graph";
 
 describe("Given the `graph` library module", () => {
-  const rootNode: Node = {
+  const rootNode: ConnectionNode = {
     data: {
       id: 0,
       label: `0xc0ffee254729296a45a3885639AC7E10F9d54979 (user.eth)`,
-      image:
-        "https://png.pngtree.com/png-clipart/20190920/original/pngtree-user-flat-character-avatar-png-png-image_4643588.jpg",
+      address: "0xc0ffee254729296a45a3885639AC7E10F9d54979",
+      domain: "test0.eth",
+      ens: "test0.eth",
+      avatar:
+        "https://png.pngtree.com/png-clipart/20190904/original/pngtree-user-cartoon-avatar-pattern-flat-avatar-png-image_4492883.jpg",
     },
     position: {
       x: Math.random() * 100,
@@ -43,7 +46,7 @@ describe("Given the `graph` library module", () => {
 
   describe("And the `formatNodes` function", () => {
     it("when a list of valid identities is supplied, then it formats them into a list of valid nodes", () => {
-      const nodes = formatNodes(identities);
+      const nodes = formatConnectionNodes(identities);
 
       expect(nodes.length).toBe(3);
       nodes.forEach((node, index) => {
@@ -57,10 +60,10 @@ describe("Given the `graph` library module", () => {
     });
   });
 
-  describe("And the `formatEdge` function", () => {
+  describe("And the `formatConnectionEdge` function", () => {
     it("when the identity of an addressed being followed is supplied, then it produces the correct edge", () => {
-      const edge = formatEdge(identities[0], rootNode, 0);
-      const nodes = formatNodes(identities);
+      const edge = formatConnectionEdge(identities[0], rootNode, 0);
+      const nodes = formatConnectionNodes(identities);
 
       expect(edge.data).toEqual(
         expect.objectContaining({
@@ -71,8 +74,8 @@ describe("Given the `graph` library module", () => {
     });
 
     it("when the identity of a followed addressed is supplied, then it produces the correct edge", () => {
-      const edge = formatEdge(identities[2], rootNode, 2);
-      const nodes = formatNodes(identities);
+      const edge = formatConnectionEdge(identities[2], rootNode, 2);
+      const nodes = formatConnectionNodes(identities);
 
       expect(edge.data).toEqual(
         expect.objectContaining({

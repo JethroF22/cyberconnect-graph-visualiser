@@ -3,6 +3,8 @@ declare global {
     interface ProcessEnv {
       REACT_APP_ALCHEMY_URL: string;
       REACT_APP_ENVIRONMENT: "STAGING" | "PRODUCTION";
+      REACT_APP_ETHERSCAN_TRANSACTIONS_URL: string;
+      REACT_APP_ETHERSCAN_API_KEY: string;
     }
   }
 }
