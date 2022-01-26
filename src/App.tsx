@@ -2,8 +2,10 @@ import Drawer from "@mui/material/Drawer";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import { styled, alpha } from "@mui/material/styles";
 
 import CustomGraph from "./components/CustomGraph";
+import Header from "./components/Header";
 
 function App() {
   return (
@@ -45,7 +47,8 @@ function App() {
           <PersonSearchIcon sx={{ fontSize: "48px", color: "#fff" }} />
         </Box>
       </Drawer>
-      <Box sx={{ display: "flex", flex: 1 }}>
+      <Box sx={{ display: "flex", flex: 1, flexDirection: "column" }}>
+        <Header />
         <CustomGraph />
       </Box>
     </Box>
