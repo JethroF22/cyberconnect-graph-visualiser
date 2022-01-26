@@ -80,7 +80,7 @@ const CustomGraph: FC = () => {
               },
             },
           ]}
-          style={{ width: "100%", height: "1000px" }}
+          style={{ width: "100%", height: "100%" }}
           elements={elements}
           layout={layout}
           cy={(cy) => (cyRef.current = cy)}
