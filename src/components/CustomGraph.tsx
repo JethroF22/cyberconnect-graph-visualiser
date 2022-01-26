@@ -5,9 +5,14 @@ import cytoscape from "cytoscape";
 import useGetConnections from "../hooks/useGetConnections";
 import useGetTransactions from "../hooks/useGetAddressTransactions";
 import { RequestState } from "../types/http";
+import {
+  nodeMouseOverHandler,
+  nodeMouseOutHandler,
+} from "../lib/cytoscapeEvents";
 
 const CustomGraph: FC = () => {
   const cyRef = useRef<cytoscape.Core>(null);
+  const address = "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E";
   const { graphInfo: socialGraphInfo, graphIsLoaded } = useGetConnections(
     "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E"
   );
@@ -33,10 +38,8 @@ const CustomGraph: FC = () => {
     if (cyRef.current) {
       const cy = cyRef.current;
 
-      cy.nodes().on("click", (event) => {
-        let target = event.target;
-        console.log("target", target._private.data);
-      });
+      cy.nodes().on("mouseover", (event) => nodeMouseOverHandler(event, cy));
+      cy.nodes().on("mouseout", (event) => nodeMouseOutHandler(event, cy));
     }
   }, [elements]);
 
@@ -61,6 +64,19 @@ const CustomGraph: FC = () => {
               style: {
                 width: 2,
                 "line-color": "data(color)",
+                display: "none",
+              },
+            },
+            {
+              selector: ".semitransparent",
+              style: {
+                opacity: 0.4,
+              },
+            },
+            {
+              selector: ".highlight",
+              style: {
+                opacity: 1,
               },
             },
           ]}
@@ -68,6 +84,7 @@ const CustomGraph: FC = () => {
           elements={elements}
           layout={layout}
           cy={(cy) => (cyRef.current = cy)}
+          autoungrabify={true}
         />
       )}
     </>
