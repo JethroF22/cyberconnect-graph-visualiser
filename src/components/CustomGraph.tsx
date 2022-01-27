@@ -1,6 +1,10 @@
-import { useRef, useEffect, FC } from "react";
+import { useRef, useEffect, useContext, FC } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
 import useGetConnections from "../hooks/useGetConnections";
 import useGetTransactions from "../hooks/useGetAddressTransactions";
@@ -9,15 +13,18 @@ import {
   nodeMouseOverHandler,
   nodeMouseOutHandler,
 } from "../lib/cytoscapeEvents";
+import { AppContext } from "../context/AppContext";
 
 const CustomGraph: FC = () => {
   const cyRef = useRef<cytoscape.Core>(null);
-  const address = "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E";
+  const {
+    state: { address },
+  } = useContext(AppContext);
   const { graphInfo: socialGraphInfo, graphIsLoaded } = useGetConnections(
-    "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E"
+    address || ""
   );
   const { requestState, graphInfo: transactionGraphInfo } = useGetTransactions(
-    "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E"
+    address || ""
   );
 
   let elements = CytoscapeComponent.normalizeElements(socialGraphInfo);
@@ -45,8 +52,40 @@ const CustomGraph: FC = () => {
 
   return (
     <>
-      {(requestState === RequestState.LOADING || !graphIsLoaded) &&
-        "Loading..."}
+      {requestState === RequestState.IDLE && (
+        <Typography
+          variant="h4"
+          noWrap
+          textAlign="center"
+          component="div"
+          color="#000"
+          sx={{
+            margin: "0 auto",
+            height: "50%",
+            paddingTop: "50px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Search for an address to get started!
+          <ArrowUpwardIcon sx={{ fontSize: "36px", color: "#000" }} />
+        </Typography>
+      )}
+      {requestState === RequestState.LOADING && (
+        <Box
+          sx={{
+            margin: "0 auto",
+            height: "50%",
+            width: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress size={64} sx={{ color: "#2d5d7b" }} />
+        </Box>
+      )}
       {requestState === RequestState.RESOLVED && graphIsLoaded && (
         <CytoscapeComponent
           stylesheet={[

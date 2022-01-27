@@ -9,7 +9,7 @@ import { ConnectionGraphInfo, ConnectionNode } from "../types/graph";
 export default function useGetConnections(address: string) {
   const { loading, data } = useQuery(following, {
     variables: {
-      address: "0x8ddD03b89116ba89E28Ef703fe037fF77451e38E",
+      address,
     },
   });
   const [graphIsLoaded, setGraphLoadedState] = useState(false);
