@@ -38,7 +38,9 @@ function FollowedTabPanel({ selectedTab, tabIndex }: TabPanelProps) {
       {selectedTab === tabIndex && (
         <Box sx={{ p: 3, width: "91%", marginRight: "0" }}>
           {(!followed || followed.length === 0) && (
-            <Typography>This address has no followed</Typography>
+            <Typography>
+              This address is not following any other addresses
+            </Typography>
           )}
 
           {followed && followed.length > 0 && (
