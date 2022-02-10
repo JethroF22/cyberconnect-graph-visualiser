@@ -1,12 +1,18 @@
+import { useContext } from "react";
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 
+import AddressDetailsHeader from "./AddressDetailsHeader";
 import TabPanel from "./TabPanel";
 
+import { AppContext } from "../context/AppContext";
+
 import colors from "../styles/colors";
-import AddressDetailsHeader from "./AddressDetailsHeader";
 
 function SidePanel() {
+  const {
+    state: { address },
+  } = useContext(AppContext);
   return (
     <Drawer
       sx={{
@@ -36,8 +42,12 @@ function SidePanel() {
           margin: "0 auto",
         }}
       >
-        <AddressDetailsHeader />
-        <TabPanel />
+        {address && (
+          <>
+            <AddressDetailsHeader />
+            <TabPanel />
+          </>
+        )}
       </Box>
     </Drawer>
   );
