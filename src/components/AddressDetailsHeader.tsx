@@ -9,7 +9,7 @@ import colors from "../styles/colors";
 
 function AddressDetailsHeader() {
   const {
-    state: { searchedIdentity },
+    state: { searchedIdentity, ethBalance },
   } = useContext(AppContext);
   return (
     <Box
@@ -32,6 +32,17 @@ function AddressDetailsHeader() {
           color={colors.cultured}
         >
           {searchedIdentity.ens}
+        </Typography>
+      )}
+      {ethBalance && (
+        <Typography
+          variant="body1"
+          noWrap
+          textAlign="center"
+          component="div"
+          color={colors.cultured}
+        >
+          {ethBalance}ETH
         </Typography>
       )}
       <Box

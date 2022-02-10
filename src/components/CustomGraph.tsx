@@ -1,4 +1,4 @@
-import { useRef, useEffect, useContext, FC } from "react";
+import { useState, useRef, useEffect, useContext, FC } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import Box from "@mui/material/Box";
@@ -6,59 +6,39 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
-import useGetConnections from "../hooks/useGetConnections";
-import useGetTransactions from "../hooks/useGetAddressTransactions";
+import useGetGraphElements from "../hooks/useGetGraphElements";
 import { RequestState } from "../types/http";
-import {
-  nodeMouseOverHandler,
-  nodeMouseOutHandler,
-} from "../lib/cytoscapeEvents";
 import { AppContext } from "../context/AppContext";
+import colors from "../styles/colors";
 
 const CustomGraph: FC = () => {
   const cyRef = useRef<cytoscape.Core>(null);
   const {
     state: { address },
   } = useContext(AppContext);
-  const { graphInfo: socialGraphInfo, graphIsLoaded } = useGetConnections(
-    address || ""
-  );
-  const { requestState, graphInfo: transactionGraphInfo } = useGetTransactions(
-    address || ""
-  );
+  const { loadingState, elements } = useGetGraphElements(address || "");
 
-  let elements = CytoscapeComponent.normalizeElements(socialGraphInfo);
-  elements = [
-    ...elements,
-    ...CytoscapeComponent.normalizeElements(transactionGraphInfo),
-  ];
+  const graphElements = CytoscapeComponent.normalizeElements(elements);
 
   const layout = {
-    name: "cose",
-    idealEdgeLength: function () {
-      return 250;
+    concentric: function (node: cytoscape.NodeSingular) {
+      return node.data("level");
     },
-    nodeOverlap: 100,
+    levelWidth: function () {
+      return 1;
+    },
+    name: "concentric",
   };
-
-  useEffect(() => {
-    if (cyRef.current) {
-      const cy = cyRef.current;
-
-      cy.nodes().on("mouseover", (event) => nodeMouseOverHandler(event, cy));
-      cy.nodes().on("mouseout", (event) => nodeMouseOutHandler(event, cy));
-    }
-  }, [elements]);
 
   return (
     <>
-      {requestState === RequestState.IDLE && (
+      {loadingState === RequestState.IDLE && (
         <Typography
           variant="h4"
           noWrap
           textAlign="center"
           component="div"
-          color="#000"
+          color={colors.richBlack}
           sx={{
             margin: "0 auto",
             height: "50%",
@@ -69,10 +49,10 @@ const CustomGraph: FC = () => {
           }}
         >
           Search for an address to get started!
-          <ArrowUpwardIcon sx={{ fontSize: "36px", color: "#000" }} />
+          <ArrowUpwardIcon sx={{ fontSize: "36px", color: colors.richBlack }} />
         </Typography>
       )}
-      {requestState === RequestState.LOADING && (
+      {loadingState === RequestState.LOADING && (
         <Box
           sx={{
             margin: "0 auto",
@@ -83,48 +63,56 @@ const CustomGraph: FC = () => {
             justifyContent: "center",
           }}
         >
-          <CircularProgress size={64} sx={{ color: "#2d5d7b" }} />
+          <CircularProgress size={64} sx={{ color: colors.darkSkyBlue }} />
         </Box>
       )}
-      {requestState === RequestState.RESOLVED && graphIsLoaded && (
-        <CytoscapeComponent
-          stylesheet={[
-            {
-              selector: "node",
-              style: {
-                width: 40,
-                height: 40,
-                shape: "ellipse",
-                "background-color": "data(color)",
+      {loadingState === RequestState.RESOLVED && (
+        <>
+          <CytoscapeComponent
+            stylesheet={[
+              {
+                selector: "node",
+                style: {
+                  width: 40,
+                  height: 40,
+                  shape: "ellipse",
+                  "background-color": "data(color)",
+                },
               },
-            },
-            {
-              selector: "edge",
-              style: {
-                width: 2,
-                "line-color": "data(color)",
-                display: "none",
+              {
+                selector: "edge",
+                style: {
+                  width: 2,
+                  "line-color": "data(color)",
+                },
               },
-            },
-            {
-              selector: ".semitransparent",
-              style: {
-                opacity: 0.4,
+              {
+                selector: ".semitransparent",
+                style: {
+                  opacity: 0.4,
+                },
               },
-            },
-            {
-              selector: ".highlight",
-              style: {
-                opacity: 1,
+              {
+                selector: ".highlight",
+                style: {
+                  opacity: 1,
+                },
               },
-            },
-          ]}
-          style={{ width: "100%", height: "100%" }}
-          elements={elements}
-          layout={layout}
-          cy={(cy) => (cyRef.current = cy)}
-          autoungrabify={true}
-        />
+              {
+                selector: ".labelled",
+                style: {
+                  label: "data(label)",
+                  "font-size": "36px",
+                },
+              },
+            ]}
+            style={{ width: "100%", height: "100%" }}
+            elements={graphElements}
+            layout={layout}
+            cy={(cy) => (cyRef.current = cy)}
+            autoungrabify={true}
+          />
+        </>
       )}
     </>
   );

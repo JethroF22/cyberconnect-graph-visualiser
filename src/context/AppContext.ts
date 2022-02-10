@@ -20,6 +20,7 @@ export const initialState = {
   transactions: null,
   followers: null,
   followed: null,
+  ethBalance: null,
 };
 
 export const appContextReducer = (
@@ -36,6 +37,21 @@ export const appContextReducer = (
       return {
         ...state,
         address: action.value as string,
+      };
+    case ActionTypes.SET_ETH_BALANCE:
+      return {
+        ...state,
+        ethBalance: action.value as string,
+      };
+    case ActionTypes.SET_ERC20_TRANSFERS:
+      return {
+        ...state,
+        erc20Transfers: action.value as Transaction[],
+      };
+    case ActionTypes.SET_ERC721_TRANSFERS:
+      return {
+        ...state,
+        erc721Transfers: action.value as Transaction[],
       };
     case ActionTypes.SET_FOLLOWED:
       return {

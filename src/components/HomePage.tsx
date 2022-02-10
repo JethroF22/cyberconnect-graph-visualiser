@@ -6,8 +6,11 @@ import CustomGraph from "./CustomGraph";
 import SidePanel from "./SidePanel";
 import Header from "./Header";
 import Legend from "./Legend";
+import useGetEthBalance from "../hooks/useGetEthBalance";
 
 function HomePage() {
+  useGetEthBalance();
+
   return (
     <Box sx={{ width: "95vw", height: "95vh", display: "flex" }}>
       <SidePanel />
