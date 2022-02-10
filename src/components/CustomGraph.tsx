@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext, FC } from "react";
+import { useRef, useContext, FC } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import Box from "@mui/material/Box";
@@ -18,6 +18,7 @@ const CustomGraph: FC = () => {
   } = useContext(AppContext);
   const { loadingState, elements } = useGetGraphElements(address || "");
 
+  // @ts-ignore
   const graphElements = CytoscapeComponent.normalizeElements(elements);
 
   const layout = {
@@ -109,7 +110,10 @@ const CustomGraph: FC = () => {
             style={{ width: "100%", height: "100%" }}
             elements={graphElements}
             layout={layout}
-            cy={(cy) => (cyRef.current = cy)}
+            cy={(cy) => {
+              // @ts-ignore
+              cyRef.current = cy;
+            }}
             autoungrabify={true}
           />
         </>
