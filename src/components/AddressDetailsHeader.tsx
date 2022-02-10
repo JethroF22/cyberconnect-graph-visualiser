@@ -9,7 +9,7 @@ import colors from "../styles/colors";
 
 function AddressDetailsHeader() {
   const {
-    state: { searchedIdentity, followers, followed },
+    state: { searchedIdentity },
   } = useContext(AppContext);
   return (
     <Box
@@ -23,6 +23,17 @@ function AddressDetailsHeader() {
       }}
     >
       <Avatar src={searchedIdentity?.avatar} sx={{ width: 75, height: 75 }} />
+      {searchedIdentity?.ens && (
+        <Typography
+          variant="h4"
+          noWrap
+          textAlign="center"
+          component="div"
+          color={colors.cultured}
+        >
+          {searchedIdentity.ens}
+        </Typography>
+      )}
       <Box
         sx={{
           height: "50%",
@@ -48,7 +59,7 @@ function AddressDetailsHeader() {
             component="div"
             color={colors.cultured}
           >
-            {followers?.length}
+            {searchedIdentity?.followerCount}
           </Typography>
           <Typography
             variant="h6"
@@ -76,7 +87,7 @@ function AddressDetailsHeader() {
             component="div"
             color={colors.cultured}
           >
-            {followed?.length}
+            {searchedIdentity?.followingCount}
           </Typography>
           <Typography
             variant="h6"
