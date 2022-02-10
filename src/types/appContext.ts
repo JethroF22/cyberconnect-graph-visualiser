@@ -4,10 +4,18 @@ import { Transaction } from "./etherscan";
 
 export enum ActionTypes {
   SET_ADDRESS = "SET_ADDRESS",
+  SET_ETH_BALANCE = "SET_ETH_BALANCE",
   SET_FOLLOWERS = "SET_FOLLOWERS",
   SET_FOLLOWED = "SET_FOLLOWED",
   SET_SEARCHED_IDENTITY = "SET_SEARCHED_IDENTITY",
   SET_TRANSACTIONS = "SET_TRANSACTIONS",
+  SET_ERC20_TRANSFERS = "SET_ERC20_TRANSFERS",
+  SET_ERC721_TRANSFERS = "SET_ERC721_TRANSFERS",
+}
+
+export interface SetEthBalanceAction {
+  type: ActionTypes.SET_ETH_BALANCE;
+  value: string;
 }
 
 export interface SetAddressAction {
@@ -30,6 +38,16 @@ export interface SetTransactionsAction {
   value: Transaction[];
 }
 
+export interface SetErc20TransfersAction {
+  type: ActionTypes.SET_ERC20_TRANSFERS;
+  value: Transaction[];
+}
+
+export interface SetErc721TransfersAction {
+  type: ActionTypes.SET_ERC721_TRANSFERS;
+  value: Transaction[];
+}
+
 export interface SetSearchedIdentityAction {
   type: ActionTypes.SET_SEARCHED_IDENTITY;
   value: Identity;
@@ -37,15 +55,21 @@ export interface SetSearchedIdentityAction {
 
 export type ReducerAction =
   | SetAddressAction
+  | SetEthBalanceAction
   | SetFollowersAction
   | SetFollowedAction
   | SetTransactionsAction
+  | SetErc20TransfersAction
+  | SetErc721TransfersAction
   | SetSearchedIdentityAction;
 
 export interface AppContextState {
   address: string | null;
+  ethBalance: string | null;
   searchedIdentity: Identity | null;
   transactions: Transaction[] | null;
+  erc20Transfers: Transaction[] | null;
+  erc721Transfers: Transaction[] | null;
   followers: Identity[] | null;
   followed: Identity[] | null;
 }

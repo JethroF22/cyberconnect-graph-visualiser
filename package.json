@@ -27,6 +27,8 @@
         "cytoscape-avsdf": "^1.0.0",
         "cytoscape-cise": "^1.0.0",
         "cytoscape-cola": "^2.5.0",
+        "cytoscape-node-html-label": "^1.2.2",
+        "cytoscape-popper": "^2.0.0",
         "ethers": "^5.5.3",
         "faker": "^6.6.6",
         "graphql": "^16.2.0",
@@ -72,5 +74,8 @@
     },
     "browser": {
         "react-cytoscape": false
+    },
+    "devDependencies": {
+        "@types/cytoscape-popper": "^2.0.0"
     }
 }
