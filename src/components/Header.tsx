@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useContext, useState } from "react";
+import { ChangeEventHandler, useContext, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
@@ -9,8 +9,11 @@ import { validateAddresses } from "../lib/validation";
 import { ActionTypes } from "../types/appContext";
 
 function Header() {
-  const { dispatch } = useContext(AppContext);
-  const [address, setAddress] = useState<string>("");
+  const {
+    dispatch,
+    state: { address: currentAddress },
+  } = useContext(AppContext);
+  const [address, setAddress] = useState<string>();
   const [isValidAddress, setValidity] = useState<boolean>(true);
 
   const search = () => {
@@ -32,6 +35,13 @@ function Header() {
     setAddress(value);
   };
 
+  useEffect(() => {
+    if (currentAddress) {
+      console.log("currentAddress", currentAddress);
+      setAddress(currentAddress);
+    }
+  }, [currentAddress]);
+
   return (
     <Box
       sx={{
@@ -52,6 +62,7 @@ function Header() {
         placeholder="Search address"
         variant="outlined"
         onChange={onChangeHandler}
+        value={address}
         error={!isValidAddress ? true : undefined}
         helperText={
           !isValidAddress ? "Please enter a valid address" : undefined

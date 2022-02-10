@@ -55,6 +55,7 @@ function TransactionsTabPanel({ selectedTab, tabIndex }: TabPanelProps) {
                 <div key={transaction.hash}>
                   <ListItemButton
                     onClick={() => toggleTransactionDetails(transaction)}
+                    sx={{ width: "100%" }}
                   >
                     <ListItemText primary={formatLabel(transaction, address)} />
                     {selectedTransaction === transaction.hash ? (
@@ -69,7 +70,7 @@ function TransactionsTabPanel({ selectedTab, tabIndex }: TabPanelProps) {
                     unmountOnExit
                   >
                     <List component="div" disablePadding>
-                      <ListItemButton sx={{ pl: 4 }}>
+                      <ListItemButton sx={{ width: "100%" }}>
                         <ListItemText
                           primary={
                             <TransactionDetails
