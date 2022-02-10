@@ -44,10 +44,7 @@ export default function useGetGraphElements(address: string) {
     if (fetchTransactionsRequestState === RequestState.IDLE) {
       loadingState = RequestState.IDLE;
     }
-    if (
-      fetchTransactionsRequestState === RequestState.LOADING &&
-      !graphIsLoaded
-    ) {
+    if (fetchTransactionsRequestState === RequestState.LOADING) {
       loadingState = RequestState.LOADING;
     }
     if (

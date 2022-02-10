@@ -81,6 +81,26 @@ export const formatTransactionGraphInfo = (
   return { nodes, edges };
 };
 
+export const filterDuplicateTransactions = (
+  transactions: Transaction[],
+  erc20Transfers: Transaction[],
+  erc721Transfers: Transaction[]
+) => {
+  const erc20TransferHashes = erc20Transfers.map(
+    (transaction) => transaction.hash
+  );
+  const erc721TransferHashes = erc721Transfers.map(
+    (transaction) => transaction.hash
+  );
+
+  return transactions.filter(
+    (transaction) =>
+      !erc20TransferHashes.includes(transaction.hash) &&
+      !erc721TransferHashes.includes(transaction.hash) &&
+      transaction.value !== "0"
+  );
+};
+
 export const formatTransactionNodes = (
   transactions: Transaction[],
   startingIndex: number
@@ -89,7 +109,7 @@ export const formatTransactionNodes = (
     data: {
       id: startingIndex + index + 1, // IDs start at 0 with rootNode
       label: `${transaction.to}`,
-      color: "#353b3c",
+      color: colors.onyx,
       level: null,
       ...transaction,
     },
@@ -189,9 +209,20 @@ export const setNodeLevels = (nodes: Node[]) => {
       },
     };
 
+    shuffleArray(nodes);
+
     const nodesWithLevels = assignNodeLevels(nodes, numLevels);
     return [rootNode, ...nodesWithLevels];
   }
 
   return [];
+};
+
+const shuffleArray = (array: any[]) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
 };

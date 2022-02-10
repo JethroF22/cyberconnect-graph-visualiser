@@ -31,7 +31,7 @@ export default function useGetConnections(address: string, rootNode: Node) {
           ...data.identity,
         },
       };
-      const followedAddresses: Identity[] = data.identity.followers.list.map(
+      const followedAddresses: Identity[] = data.identity.followings.list.map(
         (identity: Identity) => ({ ...identity, type: IdentityType.FOLLOWED })
       );
       const followingAddresses: Identity[] = data.identity.followers.list.map(
