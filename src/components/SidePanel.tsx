@@ -3,6 +3,8 @@ import Box from "@mui/material/Box";
 
 import TabPanel from "./TabPanel";
 
+import colors from "../styles/colors";
+
 function SidePanel() {
   return (
     <Drawer
@@ -13,8 +15,8 @@ function SidePanel() {
           width: "30%",
           boxSizing: "border-box",
           borderRight: "2px solid rgba(0, 0, 0, 0.12)",
-          backgroundColor: "#006494",
-          color: "#fff",
+          backgroundColor: colors.sapphireBlue,
+          color: colors.white,
           padding: "10px",
         },
       }}

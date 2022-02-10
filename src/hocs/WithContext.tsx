@@ -1,14 +1,17 @@
-import { ComponentType } from "react";
+import { ComponentType, useReducer } from "react";
 
-import { AppContext } from "../context/AppContext";
-import useAppContext from "../hooks/useAppContext";
+import {
+  AppContext,
+  appContextReducer,
+  initialState,
+} from "../context/AppContext";
 
-const WithContext = <P,>(AppComponent: ComponentType<P>) => {
+const WithContext = (AppComponent: ComponentType) => {
   const HOC = (props: any) => {
-    const { state, setState } = useAppContext();
+    const [state, dispatch] = useReducer(appContextReducer, initialState);
 
     return (
-      <AppContext.Provider value={{ state, setState }}>
+      <AppContext.Provider value={{ state, dispatch }}>
         <AppComponent {...props} />
       </AppContext.Provider>
     );

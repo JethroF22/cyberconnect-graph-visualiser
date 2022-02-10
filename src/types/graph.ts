@@ -5,24 +5,21 @@ export interface NodeData {
   id: string | number;
   label: string;
   color?: string;
-}
-
-export interface BaseNode {
-  position: {
-    x: number | null;
-    y: number | null;
-  };
+  level: number | null;
 }
 
 export interface ConnectionNodeData extends NodeData, Identity {}
 
 export interface TransactionNodeData extends NodeData, Transaction {}
 
-export interface ConnectionNode extends BaseNode {
+export interface Node {
+  data: NodeData;
+}
+export interface ConnectionNode {
   data: ConnectionNodeData;
 }
 
-export interface TransactionNode extends BaseNode {
+export interface TransactionNode {
   data: TransactionNodeData;
 }
 
@@ -36,6 +33,7 @@ export interface Edge {
 }
 
 export interface GraphInfo {
+  nodes: Node[];
   edges: Edge[];
 }
 
