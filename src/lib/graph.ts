@@ -4,9 +4,12 @@ import {
   ConnectionGraphInfo,
   ConnectionNode,
   Edge,
+  Node,
   TransactionNode,
   TransactionsGraphInfo,
 } from "../types/graph";
+
+import colors from "../styles/colors";
 
 export const formatConnectionGraphInfo = (
   identities: Identity[],
@@ -27,12 +30,12 @@ export const formatConnectionNodes = (
       label: `${identity.address} (${identity.ens})`,
       image:
         identity.avatar || "http://cdn.onlinewebfonts.com/svg/img_258083.png",
-      color: "#846a6a",
+      color:
+        identity.type === IdentityType.FOLLOWED
+          ? colors.richBlack
+          : colors.darkPurple,
+      level: null,
       ...identity,
-    },
-    position: {
-      x: null,
-      y: null,
     },
   }));
 };
@@ -63,7 +66,7 @@ export const formatConnectionEdge = (
       source: sourceId,
       target: targetId,
       label,
-      color: "#846a6a",
+      color: colors.darkSkyBlue,
     },
   };
 };
@@ -87,11 +90,8 @@ export const formatTransactionNodes = (
       id: startingIndex + index + 1, // IDs start at 0 with rootNode
       label: `${transaction.to}`,
       color: "#353b3c",
+      level: null,
       ...transaction,
-    },
-    position: {
-      x: null,
-      y: null,
     },
   }));
 };
@@ -139,4 +139,59 @@ export const getTransactionLabel = (transaction: Transaction) => {
     return "received from";
   }
   return "";
+};
+
+const calculateNumLevels = (nodes: Node[]): number => {
+  let level = 1;
+  let numNodesPerLevel = 5;
+  let levelBreakPoint = 5;
+
+  return nodes.reduce((previous: number, current: Node, index) => {
+    if (index === levelBreakPoint) {
+      level += 1;
+      numNodesPerLevel = 5 * level;
+      levelBreakPoint = levelBreakPoint + numNodesPerLevel;
+    }
+    return level;
+  }, 1);
+};
+
+const assignNodeLevels = (nodes: Node[], numLevels: number): Node[] => {
+  let level = 1;
+  let numNodesPerLevel = 5;
+  let levelBreakPoint = 5;
+  return nodes.map((node: Node, index: number) => {
+    if (index === levelBreakPoint) {
+      level += 1;
+      numNodesPerLevel = 5 * level;
+      levelBreakPoint = levelBreakPoint + numNodesPerLevel;
+    }
+
+    return {
+      ...node,
+      data: {
+        ...node.data,
+        level: numLevels - level,
+      },
+    };
+  });
+};
+
+export const setNodeLevels = (nodes: Node[]) => {
+  if (nodes.length > 0) {
+    let rootNode = nodes.shift() as Node;
+    const numLevels = calculateNumLevels(nodes);
+
+    rootNode = {
+      data: {
+        ...rootNode.data,
+        level: numLevels,
+      },
+    };
+
+    const nodesWithLevels = assignNodeLevels(nodes, numLevels);
+    return [rootNode, ...nodesWithLevels];
+  }
+
+  return [];
 };
