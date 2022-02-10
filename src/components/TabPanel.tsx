@@ -6,11 +6,12 @@ import Box from "@mui/material/Box";
 import FollowersTabPanel from "./FollowersTabPanel";
 import FollowingTabPanel from "./FollowingTabPanel";
 import TransactionsTabPanel from "./TransactionsTabPanel";
+import colors from "../styles/colors";
 
 const tabLabelStyles = {
-  color: "#eef0f2",
+  color: colors.cultured,
   "&.Mui-selected": {
-    color: "#eef0f2",
+    color: colors.cultured,
   },
 };
 
@@ -22,13 +23,21 @@ function TabPanel() {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "75%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={selectedTab}
           onChange={handleChange}
           TabIndicatorProps={{
-            style: { backgroundColor: "#eef0f2" },
+            style: { backgroundColor: colors.cultured },
           }}
         >
           <Tab label="Followers" sx={tabLabelStyles} />

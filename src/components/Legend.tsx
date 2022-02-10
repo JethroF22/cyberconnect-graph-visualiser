@@ -21,7 +21,7 @@ function Legend() {
     >
       <LegendItem text="Follower" color={colors.richBlack} />
       <LegendItem text="Following" color={colors.darkPurple} />
-      <LegendItem text="Transactions" color={colors.darkSkyBlue} />
+      <LegendItem text="Transactions" color={colors.onyx} />
     </Card>
   );
 }
