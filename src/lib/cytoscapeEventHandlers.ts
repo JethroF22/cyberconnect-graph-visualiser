@@ -1,5 +1,7 @@
 import cytoscape from "cytoscape";
 
+import { ActionTypes, ReducerAction } from "../types/appContext";
+
 export const nodeMouseOverHandler = (
   event: cytoscape.EventObject,
   cy: cytoscape.Core
@@ -39,10 +41,12 @@ export const nodeMouseOutHandler = (
 
 export const nodeOnClickHandler = (
   event: cytoscape.EventObject,
-  cy: cytoscape.Core,
-  setModalDisplayState: (displayState: boolean) => void
+  dispatch: (action: ReducerAction) => void
 ) => {
   let target: cytoscape.NodeSingular = event.target;
-  const { data } = target;
-  setModalDisplayState(true);
+  const nodeData = target.data();
+  dispatch({
+    type: ActionTypes.SET_SELECTED_NODE,
+    value: nodeData,
+  });
 };
