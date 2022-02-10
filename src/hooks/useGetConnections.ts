@@ -1,17 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useQuery } from "react-apollo";
 
 import { following } from "../graphql/queries";
 import { formatConnectionGraphInfo } from "../lib/graph";
-import { Identity, IdentityType } from "../types/connections";
-import { ConnectionGraphInfo, ConnectionNode } from "../types/graph";
 
-export default function useGetConnections(address: string) {
+import { AppContext } from "../context/AppContext";
+
+import { Identity, IdentityType } from "../types/connections";
+import { ConnectionGraphInfo, ConnectionNode, Node } from "../types/graph";
+import { ActionTypes } from "../types/appContext";
+
+export default function useGetConnections(address: string, rootNode: Node) {
   const { loading, data } = useQuery(following, {
     variables: {
       address,
     },
   });
+  const { dispatch } = useContext(AppContext);
   const [graphIsLoaded, setGraphLoadedState] = useState(false);
   const [graphInfo, setGraphInfo] = useState<ConnectionGraphInfo>({
     nodes: [],
@@ -20,16 +25,10 @@ export default function useGetConnections(address: string) {
 
   useEffect(() => {
     if (!loading && data) {
-      const rootNode: ConnectionNode = {
+      const rootNodeWithIdentityData: ConnectionNode = {
         data: {
-          id: 0,
-          label: `${data.identity.address} (${data.identity.ens})`,
-          color: "#C6C7C4",
+          ...rootNode.data,
           ...data.identity,
-        },
-        position: {
-          x: 0,
-          y: 0,
         },
       };
       const followedAddresses: Identity[] = data.identity.followers.list.map(
@@ -40,10 +39,22 @@ export default function useGetConnections(address: string) {
       );
       const graphInfo = formatConnectionGraphInfo(
         [...followedAddresses, ...followingAddresses],
-        rootNode
+        rootNodeWithIdentityData
       );
       setGraphInfo(graphInfo);
       setGraphLoadedState(true);
+      dispatch({
+        type: ActionTypes.SET_FOLLOWED,
+        value: followedAddresses,
+      });
+      dispatch({
+        type: ActionTypes.SET_FOLLOWERS,
+        value: followingAddresses,
+      });
+      dispatch({
+        type: ActionTypes.SET_SEARCHED_IDENTITY,
+        value: data.identity,
+      });
     }
   }, [loading, data]);
 
