@@ -1,15 +1,15 @@
 import { ChangeEventHandler, useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-
 import SearchIcon from "@mui/icons-material/Search";
 import { InputAdornment } from "@mui/material";
 
 import { AppContext } from "../context/AppContext";
 import { validateAddresses } from "../lib/validation";
+import { ActionTypes } from "../types/appContext";
 
 function Header() {
-  const { setState, state } = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
   const [address, setAddress] = useState<string>("");
   const [isValidAddress, setValidity] = useState<boolean>(true);
 
@@ -17,9 +17,9 @@ function Header() {
     const isValid = validateAddresses(address);
     if (isValid) {
       setValidity(true);
-      setState({
-        ...state,
-        address,
+      dispatch({
+        type: ActionTypes.SET_ADDRESS,
+        value: address,
       });
     } else {
       console.log("invalid address");

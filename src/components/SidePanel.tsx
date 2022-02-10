@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import TabPanel from "./TabPanel";
 
 import colors from "../styles/colors";
+import AddressDetailsHeader from "./AddressDetailsHeader";
 
 function SidePanel() {
   return (
@@ -26,6 +27,7 @@ function SidePanel() {
       <Box
         sx={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           padding: "10px",
@@ -34,6 +36,7 @@ function SidePanel() {
           margin: "0 auto",
         }}
       >
+        <AddressDetailsHeader />
         <TabPanel />
       </Box>
     </Drawer>
