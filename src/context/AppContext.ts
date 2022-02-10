@@ -18,6 +18,8 @@ export const initialState = {
   address: "",
   searchedIdentity: null,
   transactions: null,
+  erc20Transfers: null,
+  erc721Transfers: null,
   followers: null,
   followed: null,
   ethBalance: null,

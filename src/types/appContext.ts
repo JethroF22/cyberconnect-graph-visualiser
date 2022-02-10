@@ -64,7 +64,7 @@ export type ReducerAction =
   | SetSearchedIdentityAction;
 
 export interface AppContextState {
-  address: string | null;
+  address: string;
   ethBalance: string | null;
   searchedIdentity: Identity | null;
   transactions: Transaction[] | null;

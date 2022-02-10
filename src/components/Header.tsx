@@ -13,7 +13,7 @@ function Header() {
     dispatch,
     state: { address: currentAddress },
   } = useContext(AppContext);
-  const [address, setAddress] = useState<string>();
+  const [address, setAddress] = useState<string>("");
   const [isValidAddress, setValidity] = useState<boolean>(true);
 
   const search = () => {
