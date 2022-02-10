@@ -26,6 +26,10 @@ export interface ERC20Transfer extends Transaction {
   tokenDecimal: string;
 }
 
+export interface ERC721Transfer extends ERC20Transfer {
+  tokenID: string;
+}
+
 export interface EtherscanTransactionsResponse {
   status: string;
   message: string;

@@ -3,6 +3,7 @@ import { formatUnits } from "ethers/lib/utils";
 
 import {
   ERC20Transfer,
+  ERC721Transfer,
   Transaction,
   TransactionType,
 } from "../types/etherscan";
@@ -29,13 +30,19 @@ export const formatLabel = (
   const received =
     searchedAddress.toLowerCase() === transaction.to.toLowerCase();
   if (transaction.type === TransactionType.STANDARD_TRANSACTION) {
-    return `${received ? "Recieved" : "Sent"} ${convertToEth(
+    return `${received ? "Received" : "Sent"} ${convertToEth(
       transaction.value
     )}ETH`;
   }
   if (transaction.type === TransactionType.ERC20_TRANSFER) {
-    return `${received ? "Recieved" : "Sent"} ${formatErc20Value(
+    return `${received ? "Received" : "Sent"} ${formatErc20Value(
       transaction as ERC20Transfer
     )}${(transaction as ERC20Transfer).tokenSymbol}`;
+  }
+  if (transaction.type === TransactionType.ERC721_TRANSFER) {
+    console.log("transaction", transaction);
+    return `${received ? "Received" : "Transferred"} ${
+      (transaction as ERC721Transfer).tokenName
+    } Token`;
   }
 };

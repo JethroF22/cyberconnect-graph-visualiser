@@ -5,6 +5,7 @@ import {
   Transaction,
   ERC20Transfer,
   TransactionType,
+  ERC721Transfer,
 } from "../types/etherscan";
 import { formatErc20Value, convertToEth } from "../lib/transactions";
 
@@ -18,8 +19,24 @@ function TransactionDetails({
   searchedAddress,
 }: TransactionDetailsProps) {
   return (
-    <Box sx={{ width: "80%" }}>
-      <Typography variant="caption" component="div">
+    <Box
+      sx={{
+        width: "60%",
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+      }}
+    >
+      <Typography
+        variant="caption"
+        component="div"
+        sx={{
+          overflowWrap: "break-word",
+          maxWidth: "90%",
+        }}
+      >
         Hash: {transaction.hash}
       </Typography>
       <Typography variant="caption" component="div">
@@ -45,6 +62,18 @@ function TransactionDetails({
       {transaction.type === TransactionType.STANDARD_TRANSACTION && (
         <Typography variant="caption" component="div">
           Value: {convertToEth(transaction.value)}ETH
+        </Typography>
+      )}
+      {transaction.type === TransactionType.ERC721_TRANSFER && (
+        <Typography
+          variant="caption"
+          component="div"
+          sx={{
+            overflowWrap: "break-word",
+            maxWidth: "90%",
+          }}
+        >
+          Token ID: {(transaction as ERC721Transfer).tokenID}
         </Typography>
       )}
     </Box>

@@ -70,8 +70,9 @@ function TransactionsTabPanel({ selectedTab, tabIndex }: TabPanelProps) {
                     unmountOnExit
                   >
                     <List component="div" disablePadding>
-                      <ListItemButton sx={{ width: "100%" }}>
+                      <ListItemButton>
                         <ListItemText
+                          sx={{ maxWidth: "100%" }}
                           primary={
                             <TransactionDetails
                               transaction={transaction}
